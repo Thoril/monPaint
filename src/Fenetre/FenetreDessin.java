@@ -28,10 +28,7 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         contentPane.add(this.zoneDessin,BorderLayout.CENTER);
         zoneDessin.addMouseListener(this);
         zoneDessin.addMouseMotionListener(this);
-
-
         this.setJMenuBar(monMenu());
-
         this.setVisible(true);
     }
 
@@ -73,7 +70,6 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
                 break;
             case"Ellipse":
                 this.zoneDessin.setFigureSelectionne(new Ellipse());
-
                 typeOutil = TypeOutil.FIGURE;
                 break;
             case"Cercle":
@@ -122,7 +118,6 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     public void mouseReleased(MouseEvent e) {
         if(typeOutil == TypeOutil.FIGURE) {
             if( this.zoneDessin.getDepartDessin() != null) {
-                System.out.println("mouseReleased");
                 this.zoneDessin.addListeFigure(this.zoneDessin.getFigureSelectionne());
                 String nomFigure = this.zoneDessin.getFigureSelectionne().getClass().getName();
                 switch (nomFigure) {
@@ -178,8 +173,24 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
                 depart.setY(origine.getY());
                 arrive.setY(e.getY());
             }
+            int largeur = arrive.getX() - depart.getX();
+            int hauteur = arrive.getY() - depart.getY();
+            int longueurMax = Math.max(hauteur,largeur);
+            String nomFigure = this.zoneDessin.getFigureSelectionne().getClass().getName();
+            if(nomFigure == "Figure.Carre" || nomFigure == "Figure.Cercle"){
+                if(origine.getX()> e.getX()) {
+                    if (largeur < longueurMax) {
+                        depart.setX(depart.getX() - (longueurMax - largeur));
+                    }
+                }
+                if(origine.getY()> e.getY()) {
+                    if (hauteur < longueurMax) {
+                        depart.setY(depart.getY() - (longueurMax - hauteur));
+                    }
+                }
+            }
             this.zoneDessin.setOrigineDessinFigure(depart);
-            this.zoneDessin.setDimensionFigure(arrive.getX() - depart.getX(), arrive.getY() - depart.getY());
+            this.zoneDessin.setDimensionFigure(largeur, hauteur);
 
         }
         if(typeOutil == TypeOutil.PINCEAU) {
