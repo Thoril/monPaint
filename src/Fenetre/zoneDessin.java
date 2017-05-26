@@ -8,20 +8,20 @@ import java.util.ArrayList;
 
 public class zoneDessin extends JPanel {
     private Figure figureSelectionne;
-    private ArrayList<Figure> liste;
+    private ArrayList<Figure> listeFigure;
     private Color couleur;
 
     public zoneDessin(){
         super();
-        this.liste= new ArrayList<Figure>();
-        this.liste.clear();
+        this.listeFigure= new ArrayList<Figure>();
+        this.listeFigure.clear();
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         this.setBackground(Color.WHITE);
         //System.out.println("On dessine la figure sélectionné");
-        if(!this.liste.isEmpty()) {
+        if(!this.listeFigure.isEmpty()) {
             this.afficheListeFigure(g);
         }
         if(this.figureSelectionne != null) {
@@ -39,7 +39,7 @@ public class zoneDessin extends JPanel {
     }
 
     public void afficheListeFigure(Graphics g){
-        for(Figure f : this.liste) {
+        for(Figure f : this.listeFigure) {
             f.dessine(g);
         }
      }
@@ -53,9 +53,10 @@ public class zoneDessin extends JPanel {
         this.figureSelectionne = figureSelectionne;
     }
     public void addListeFigure(Figure f){
-        int indice = this.liste.size();
+        int indice = this.listeFigure.size();
         System.out.println("Ajout d'une figure indice:"+indice);
-        this.liste.add(f);
+        f.setCouleur(this.couleur);
+        this.listeFigure.add(f);
     }
 
     public void setOrigineFigure(Point origine){
@@ -69,5 +70,10 @@ public class zoneDessin extends JPanel {
     public void setDimensionFigure(int hauteur, int largeur){
         //System.out.println("Dimension set en "+hauteur+" ,"+largeur );
         this.figureSelectionne.setBoundingBox(hauteur, largeur);
+    }
+
+    public void effacer(){
+        this.listeFigure = new ArrayList<Figure>();
+        repaint();
     }
 }

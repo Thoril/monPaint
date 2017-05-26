@@ -6,7 +6,7 @@ import Fenetre.FenetreDessin;
 
 public class Main {
     public static void main(String[] args) {
-
+        //nouvelle fenetre
         FenetreDessin paint = new FenetreDessin("monPaint");
     }
 }
