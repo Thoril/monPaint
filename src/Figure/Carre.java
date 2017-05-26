@@ -28,11 +28,14 @@ public class Carre extends Rectangle{
     }
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
-        g.fillRect(this.origine.getX(),this.origine.getY(),this.largeur,this.largeur);
+        if(this.departDessin != null && this.largeur != 0) {
+            g.fillRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.largeur);
+        }
     }
     @Override
     public void setBoundingBox(int hauteurBB, int largeurBB) {
-        this.largeur =hauteurBB;
-        this.longueur = hauteurBB;
+        int dimension = Math.max(hauteurBB, largeurBB);
+        this.largeur =dimension;
+        this.longueur = dimension;
     }
 }

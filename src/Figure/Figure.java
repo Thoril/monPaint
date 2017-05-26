@@ -8,7 +8,7 @@ import java.awt.*;
 public abstract class Figure {
     protected Point origine;
     protected Color couleur;
-
+    protected Point departDessin;
     public Figure(Point origine, Color couleur){
         this.origine=origine;
         this.couleur = couleur;
@@ -38,9 +38,13 @@ public abstract class Figure {
     }
 
     public Point getOrigine() {
-        return origine;
+        return this.origine;
     }
 
+    public void setDepartDessin(Point p){departDessin = p;}
+    public Point getDepartDessin() {
+        return this.departDessin;
+    }
     public void setCouleur(Color couleur){
         this.couleur = couleur;
     }

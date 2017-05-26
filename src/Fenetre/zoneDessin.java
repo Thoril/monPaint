@@ -15,6 +15,7 @@ public class zoneDessin extends JPanel {
         super();
         this.listeFigure= new ArrayList<Figure>();
         this.listeFigure.clear();
+        this.couleur = Color.black;
     }
 
     protected void paintComponent(Graphics g) {
@@ -70,6 +71,12 @@ public class zoneDessin extends JPanel {
     public void setDimensionFigure(int hauteur, int largeur){
         //System.out.println("Dimension set en "+hauteur+" ,"+largeur );
         this.figureSelectionne.setBoundingBox(hauteur, largeur);
+    }
+    public void setOrigineDessinFigure(Point p){
+        this.figureSelectionne.setDepartDessin(p);
+    }
+    public Point getDepartDessin(){
+        return(this.figureSelectionne.getDepartDessin());
     }
 
     public void effacer(){
