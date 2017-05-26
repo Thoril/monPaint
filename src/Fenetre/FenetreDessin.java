@@ -39,9 +39,6 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         switch (cmd){
-            case "Quit":
-                System.exit(0);
-                break;
             case"Noir":
                 this.zoneDessin.setCouleur(Color.black);
                 this.couleurActuelle =Color.black;
@@ -93,6 +90,12 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
                 break;
             case"Pinceau":
                 typeOutil = TypeOutil.PINCEAU;
+                break;
+            case"Effacer":
+                this.zoneDessin.effacer();
+                break;
+            case"Quitter":
+                System.exit(0);
                 break;
             default:
                 System.err.println(cmd);
@@ -225,22 +228,39 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     }
 
     private JMenuBar monMenu(){
-        JMenuBar monMenu= new JMenuBar();
-        JMenu file=new JMenu("File");
-        file.add(new JMenuItem("New"));
-        file.add(new JMenuItem("Open"));
+        JMenuBar menuBar = new JMenuBar();
+        JMenu   fichier = new JMenu("Fichier"),
+                edition = new JMenu("Edition"),
+                apropos = new JMenu("A propos");
 
-        JMenuItem fileSave = new JMenuItem("Save");
-        fileSave.setAccelerator(KeyStroke.getKeyStroke('S',
+        JMenuItem   effacer = new JMenuItem("Effacer"),
+                quitter = new JMenuItem("Quitter"),
+                sauvegarder = new JMenuItem("Sauvegarder"),
+                auteur = new JMenuItem("Auteur");
+
+        sauvegarder.setAccelerator(KeyStroke.getKeyStroke('S',
                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
                 false));
-        file.add(fileSave);
-        file.addSeparator();
-        file.add((new JMenuItem("Quit") ));
-        monMenu.add(file);
-        JMenu aPropos = new JMenu("A propos");
-        aPropos.add(new JMenuItem("Auteurs"));
-        monMenu.add(aPropos);
-        return (monMenu);
+        quitter.setAccelerator(KeyStroke.getKeyStroke('Q',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        effacer.setAccelerator(KeyStroke.getKeyStroke('E',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        fichier.add(effacer);
+        fichier.add(sauvegarder);
+        fichier.addSeparator();
+        fichier.add(quitter);
+        //fichier.setMnemonic('F');
+        apropos.add(auteur);
+        quitter.addActionListener(this);
+        effacer.addActionListener(this);
+
+        menuBar.add(fichier);
+        menuBar.add(edition);
+        menuBar.add(apropos);
+
+        this.setJMenuBar(menuBar);
+        return (menuBar);
     }
 }
