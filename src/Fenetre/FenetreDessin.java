@@ -86,6 +86,10 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
                 zoneDessin.setFigureSelectionne(new Ellipse());
                 typeOutil = TypeOutil.FIGURE;
                 break;
+            case"Coeur":
+                zoneDessin.setFigureSelectionne(new Coeur());
+                typeOutil = TypeOutil.FIGURE;
+                break;
             case"Cercle":
                 zoneDessin.setFigureSelectionne(new Cercle());
                 typeOutil = TypeOutil.FIGURE;
@@ -142,14 +146,17 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
                     case "Figure.Carre":
                         zoneDessin.setFigureSelectionne(new Carre());
                         break;
-                    case "Figure.Cercle":
-                        zoneDessin.setFigureSelectionne(new Cercle());
+                    case "Figure.Coeur":
+                        zoneDessin.setFigureSelectionne(new Coeur());
                         break;
                     case "Figure.Rectangle":
                         zoneDessin.setFigureSelectionne(new Rectangle());
                         break;
                     case "Figure.Ellipse":
                         zoneDessin.setFigureSelectionne(new Ellipse());
+                        break;
+                    case "Figure.Cercle":
+                        zoneDessin.setFigureSelectionne(new Cercle());
                         break;
 
                 }
@@ -261,7 +268,7 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     private JPanel panelFigure(){
         JPanel panneauFigure= new JPanel();
-        panneauFigure.setLayout(new GridLayout(2,2));
+        panneauFigure.setLayout(new GridLayout(2,3));
         Bouton bEllipse = new Bouton("Ellipse",Color.white,this);
         panneauFigure.add(bEllipse);
         Bouton bCercle = new Bouton("Cercle",Color.white,this);
@@ -270,6 +277,10 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         panneauFigure.add(bCarre);
         Bouton bRectangle = new Bouton("Rectangle",Color.white,this);
         panneauFigure.add(bRectangle);
+        Bouton bCoeur = new Bouton("Coeur",Color.white,this);
+        panneauFigure.add(bCoeur);
+        Bouton bSegment = new Bouton("Segment",Color.white,this);
+        panneauFigure.add(bSegment);
         return (panneauFigure);
     }
     private JPanel panelOutil(){
