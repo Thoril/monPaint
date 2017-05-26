@@ -5,6 +5,7 @@ import Figure.Point;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.*;
 import Figure.Rectangle;
 public class FenetreDessin extends JFrame implements ActionListener,MouseMotionListener,MouseListener {
@@ -29,24 +30,24 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         this.listeZoneDessin.add(new ZoneDessin());
         this.listeZoneDessin.add(new ZoneDessin());
         int i = 1;
-        for (ZoneDessin item: this.listeZoneDessin) {
-            mesOnglets.add(item,"zone n°"+i);
-            item.addMouseListener(this);
-            item.addMouseMotionListener(this);
+        for (Object item: this.listeZoneDessin) {
+            ZoneDessin zoneDessin = (ZoneDessin) item;
+            mesOnglets.add(zoneDessin,"zone n°"+i);
+            zoneDessin.addMouseListener(this);
+            zoneDessin.addMouseMotionListener(this);
             i++;
         }
         //mesOnglets.add(listeZoneDessin[0],"zone n°1");
         contentPane.add(mesOnglets,BorderLayout.CENTER);
-        listeZoneDessin[0].addMouseListener(this);
-        listeZoneDessin[0].addMouseMotionListener(this);
+
         this.setJMenuBar(monMenu());
         this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ZoneDessin zoneDessin = new ZoneDessin();
-        zoneDessin = this.listeZoneDessin.get([this.mesOnglets.getSelectedIndex()]);
+        ZoneDessin zoneDessin;
+        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         String cmd = e.getActionCommand();
         switch (cmd){
             case"Noir":
@@ -118,8 +119,8 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     @Override
     public void mousePressed(MouseEvent e) {
-        ZoneDessin zoneDessin = new ZoneDessin();
-        zoneDessin = this.listeZoneDessin.get([this.mesOnglets.getSelectedIndex()]);
+        ZoneDessin zoneDessin;
+        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
        if(typeOutil == TypeOutil.FIGURE) {
            Point origine = new Point(e.getX(), e.getY());
            zoneDessin.setOrigineFigure(origine);
@@ -131,22 +132,24 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        ZoneDessin zoneDessin;
+        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         if(typeOutil == TypeOutil.FIGURE) {
-            if( this.listeZoneDessin[0].getDepartDessin() != null) {
-                this.listeZoneDessin[0].addListeFigure(this.listeZoneDessin[0].getFigureSelectionne());
-                String nomFigure = this.listeZoneDessin[0].getFigureSelectionne().getClass().getName();
+            if( zoneDessin.getDepartDessin() != null) {
+                zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
+                String nomFigure = zoneDessin.getFigureSelectionne().getClass().getName();
                 switch (nomFigure) {
                     case "Figure.Carre":
-                        this.listeZoneDessin[0].setFigureSelectionne(new Carre());
+                        zoneDessin.setFigureSelectionne(new Carre());
                         break;
                     case "Figure.Cercle":
-                        this.listeZoneDessin[0].setFigureSelectionne(new Cercle());
+                        zoneDessin.setFigureSelectionne(new Cercle());
                         break;
                     case "Figure.Rectangle":
-                        this.listeZoneDessin[0].setFigureSelectionne(new Rectangle());
+                        zoneDessin.setFigureSelectionne(new Rectangle());
                         break;
                     case "Figure.Ellipse":
-                        this.listeZoneDessin[0].setFigureSelectionne(new Ellipse());
+                        zoneDessin.setFigureSelectionne(new Ellipse());
                         break;
 
                 }
@@ -171,8 +174,8 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        ZoneDessin zoneDessin = new ZoneDessin();
-        zoneDessin = this.listeZoneDessin.get([this.mesOnglets.getSelectedIndex()]);
+        ZoneDessin zoneDessin;
+        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         if(typeOutil == TypeOutil.FIGURE) {
             Point origine = zoneDessin.getOrigineFigure();
             Point depart = new Point(),arrive = new Point();
@@ -224,8 +227,8 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     }
 
     private void pinceau(MouseEvent  e){
-        ZoneDessin zoneDessin = new ZoneDessin();
-        zoneDessin = this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
+        ZoneDessin zoneDessin;
+        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         zoneDessin.setFigureSelectionne(new Cercle());
         Point origine = new Point(e.getX(), e.getY());
         zoneDessin.setOrigineFigure(origine);
