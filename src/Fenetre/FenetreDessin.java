@@ -19,7 +19,7 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         this.setLayout(new BorderLayout());
         Container contentPane = this.getContentPane() ;
         JPanel monPanel = new JPanel();
-        monPanel.setLayout(new GridLayout(1,3));
+        monPanel.setLayout(new FlowLayout());
         monPanel.add( panelCouleur());
         monPanel.add(panelFigure());
         monPanel.add(panelOutil());
@@ -107,8 +107,9 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     public void mouseClicked(MouseEvent e) {
         if(typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
+            repaint();
         }
-        repaint();
+
 
     }
 
@@ -123,24 +124,28 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     @Override
     public void mouseReleased(MouseEvent e) {
         if(typeOutil == TypeOutil.FIGURE) {
-            this.zoneDessin.addListeFigure(this.zoneDessin.getFigureSelectionne());
-            String nomFigure = this.zoneDessin.getFigureSelectionne().getClass().getName();
-            switch (nomFigure) {
-                case "Figure.Carre":
-                    this.zoneDessin.setFigureSelectionne(new Carre());
-                    break;
-                case "Figure.Cercle":
-                    this.zoneDessin.setFigureSelectionne(new Cercle());
-                    break;
-                case "Figure.Rectangle":
-                    this.zoneDessin.setFigureSelectionne(new Rectangle());
-                    break;
-                case "Figure.Ellipse":
-                    this.zoneDessin.setFigureSelectionne(new Ellipse());
-                    break;
+            if( this.zoneDessin.getDepartDessin() != null) {
+                System.out.println("mouseReleased");
+                this.zoneDessin.addListeFigure(this.zoneDessin.getFigureSelectionne());
+                String nomFigure = this.zoneDessin.getFigureSelectionne().getClass().getName();
+                switch (nomFigure) {
+                    case "Figure.Carre":
+                        this.zoneDessin.setFigureSelectionne(new Carre());
+                        break;
+                    case "Figure.Cercle":
+                        this.zoneDessin.setFigureSelectionne(new Cercle());
+                        break;
+                    case "Figure.Rectangle":
+                        this.zoneDessin.setFigureSelectionne(new Rectangle());
+                        break;
+                    case "Figure.Ellipse":
+                        this.zoneDessin.setFigureSelectionne(new Ellipse());
+                        break;
 
+                }
             }
         }
+        repaint();
     }
 
     @Override
@@ -158,7 +163,24 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     public void mouseDragged(MouseEvent e) {
         if(typeOutil == TypeOutil.FIGURE) {
             Point origine = this.zoneDessin.getOrigineFigure();
-            this.zoneDessin.setDimensionFigure(e.getX() - origine.getX(), e.getY() - origine.getY());
+            Point depart = new Point(),arrive = new Point();
+            if(origine.getX()> e.getX()){
+                depart.setX(e.getX());
+                arrive.setX(origine.getX());
+            }else{
+                depart.setX(origine.getX());
+                arrive.setX(e.getX());
+            }
+            if(origine.getY()> e.getY()){
+                depart.setY(e.getY());
+                arrive.setY(origine.getY());
+            }else{
+                depart.setY(origine.getY());
+                arrive.setY(e.getY());
+            }
+            this.zoneDessin.setOrigineDessinFigure(depart);
+            this.zoneDessin.setDimensionFigure(arrive.getX() - depart.getX(), arrive.getY() - depart.getY());
+
         }
         if(typeOutil == TypeOutil.PINCEAU) {
          pinceau(e);

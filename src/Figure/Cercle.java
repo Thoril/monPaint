@@ -26,10 +26,13 @@ public class Cercle extends Ellipse{
     @Override
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
-        g.fillOval(this.origine.getX(),this.origine.getY(),this.grand_axe,this.grand_axe);
+        if(this.departDessin != null && this.grand_axe != 0) {
+            g.fillOval(this.departDessin.getX(), this.departDessin.getY(), this.grand_axe, this.grand_axe);
+        }
     }
     public void setBoundingBox(int hauteurBB, int largeurBB) {
-        this.petit_axe =hauteurBB;
-        this.grand_axe = hauteurBB;
+        int dimension = Math.max(hauteurBB, largeurBB);
+        this.petit_axe =dimension;
+        this.grand_axe = dimension;
     }
 }

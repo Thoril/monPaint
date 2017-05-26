@@ -78,7 +78,9 @@ public class Rectangle extends Figure {
     @Override
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
-        g.fillRect(this.origine.getX(),this.origine.getY(),this.largeur,this.longueur);
+        if(this.departDessin != null && this.largeur != 0 && this. longueur != 0) {
+            g.fillRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.longueur);
+        }
     }
 
     @Override
