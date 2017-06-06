@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Objects;
 import javax.swing.*;
 import Figure.Rectangle;
-public class FenetreDessin extends JFrame implements ActionListener,MouseMotionListener,MouseListener {
+import java.lang.Runnable;
+
+public class FenetreDessin extends JFrame implements ActionListener,MouseMotionListener,MouseListener,ItemListener,Runnable {
     private ArrayList listeZoneDessin =  new ArrayList();
+    private int indiceOnglet= 0;
     private JTabbedPane mesOnglets = new JTabbedPane();
     private enum TypeOutil {FIGURE, PINCEAU, GOMME}
     private TypeOutil typeOutil;
+    private int taillePinceau = 5;
     private Color couleurActuelle;
     public FenetreDessin(String titre){
         super(titre);
@@ -29,13 +33,12 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         contentPane.add(monPanel,BorderLayout.SOUTH);
         this.listeZoneDessin.add(new ZoneDessin());
         this.listeZoneDessin.add(new ZoneDessin());
-        int i = 1;
         for (Object item: this.listeZoneDessin) {
             ZoneDessin zoneDessin = (ZoneDessin) item;
-            mesOnglets.add(zoneDessin,"zone n°"+i);
+            mesOnglets.add(zoneDessin,"zone n°"+ ++indiceOnglet);
             zoneDessin.addMouseListener(this);
             zoneDessin.addMouseMotionListener(this);
-            i++;
+
         }
         //mesOnglets.add(listeZoneDessin[0],"zone n°1");
         contentPane.add(mesOnglets,BorderLayout.CENTER);
@@ -47,7 +50,11 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     @Override
     public void actionPerformed(ActionEvent e) {
         ZoneDessin zoneDessin;
-        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
+        if(this.mesOnglets.getSelectedIndex()!= -1) {
+            zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
+        }else{
+            zoneDessin = new ZoneDessin();
+        }
         String cmd = e.getActionCommand();
         switch (cmd){
             case"Noir":
@@ -111,6 +118,25 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
             case"Quitter":
                 System.exit(0);
                 break;
+            case"Nouvel Onglet":
+                ZoneDessin z = new ZoneDessin();
+                mesOnglets.add(z,"zone n°"+ ++indiceOnglet);
+                z.addMouseListener(this);
+                z.addMouseMotionListener(this);
+                this.listeZoneDessin.add(z);
+                break;
+            case"Supprimer Onglet":
+                int indiceOngletActif = this.mesOnglets.getSelectedIndex();
+                System.out.println("indice:"+indiceOngletActif);
+                mesOnglets.removeTabAt(indiceOngletActif);
+                this.listeZoneDessin.remove(indiceOngletActif);
+                System.out.println("Suppresion d'un Onglet");
+                //mesOnglets.
+                break;
+            case"Gomme":
+                typeOutil = TypeOutil.GOMME;
+                break;
+
             default:
                 System.err.println(cmd);
                 break;
@@ -181,6 +207,7 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     @Override
     public void mouseDragged(MouseEvent e) {
+
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         if(typeOutil == TypeOutil.FIGURE) {
@@ -221,7 +248,12 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
         }
         if(typeOutil == TypeOutil.PINCEAU) {
-         pinceau(e);
+            Thread tache = pinceau(e);
+            tache.start();
+
+        }
+        if(typeOutil == TypeOutil.GOMME) {
+            gomme(e);
         }
         zoneDessin.repaint();
     }
@@ -238,9 +270,21 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         Point origine = new Point(e.getX(), e.getY());
         zoneDessin.setOrigineFigure(origine);
         zoneDessin.setOrigineDessinFigure(origine);
-        zoneDessin.setDimensionFigure(8, 8);
+        zoneDessin.setDimensionFigure(taillePinceau, taillePinceau);
         zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
         zoneDessin.setFigureSelectionne(new Cercle());
+    }
+    private void gomme(MouseEvent  e){
+        ZoneDessin zoneDessin;
+        zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
+        zoneDessin.setFigureSelectionne(new Carre());
+        Point origine = new Point(e.getX(), e.getY());
+        zoneDessin.setOrigineFigure(origine);
+        zoneDessin.setCouleur(Color.WHITE);
+        zoneDessin.setOrigineDessinFigure(origine);
+        zoneDessin.setDimensionFigure(taillePinceau, taillePinceau);
+        zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
+        zoneDessin.setFigureSelectionne(new Carre());
     }
     private JPanel panelCouleur(){
         JPanel panneauCouleur = new JPanel();
@@ -283,12 +327,21 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     }
     private JPanel panelOutil(){
         JPanel panneauOutil= new JPanel();
-        panneauOutil.setLayout(new GridLayout(2,1));
+        panneauOutil.setLayout(new GridLayout(2,2));
 
         Bouton pinceau = new Bouton("Pinceau",Color.white,this);
         panneauOutil.add(pinceau);
         Bouton gomme = new Bouton("Gomme",Color.white,this);
         panneauOutil.add(gomme);
+        JComboBox taillePinceau = new JComboBox();
+        taillePinceau.addItem("5px");
+        taillePinceau.addItem("10px");
+        taillePinceau.addItem("15px");
+        taillePinceau.addItem("20px");
+        taillePinceau.addItemListener(this);
+        panneauOutil.add(taillePinceau);
+
+
         return (panneauOutil);
     }
 
@@ -301,7 +354,9 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         JMenuItem   effacer = new JMenuItem("Effacer"),
                 quitter = new JMenuItem("Quitter"),
                 sauvegarder = new JMenuItem("Sauvegarder"),
-                auteur = new JMenuItem("Auteur");
+                auteur = new JMenuItem("Auteur"),
+                nouvelOnglet = new JMenuItem("Nouvel Onglet"),
+                supprimerOnglet = new JMenuItem("Supprimer Onglet");
 
         sauvegarder.setAccelerator(KeyStroke.getKeyStroke('S',
                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
@@ -316,11 +371,17 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         fichier.add(sauvegarder);
         fichier.addSeparator();
         fichier.add(quitter);
-        //fichier.setMnemonic('F');
+        fichier.setMnemonic('F');
+
         apropos.add(auteur);
+
+        edition.add(nouvelOnglet);
+        edition.add(supprimerOnglet);
+
         quitter.addActionListener(this);
         effacer.addActionListener(this);
-
+        nouvelOnglet.addActionListener(this);
+        supprimerOnglet.addActionListener(this);
         menuBar.add(fichier);
         menuBar.add(edition);
         menuBar.add(apropos);
@@ -328,4 +389,34 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         this.setJMenuBar(menuBar);
         return (menuBar);
     }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        String str = (String) e.getItem();
+        switch (str){
+            case"5px":
+                this.taillePinceau = 5;
+                break;
+            case"10px":
+                this.taillePinceau = 10;
+                break;
+            case"15px":
+                this.taillePinceau = 15;
+                break;
+            case"20px":
+                this.taillePinceau = 20;
+                break;
+            default:
+                System.out.println("événement déclenché sur : " + e.getItem());
+                break;
+
+        }
+    }
+        @Override
+        public void run() {
+            // Code à exécuter.
+
+        }
+
+
 }
