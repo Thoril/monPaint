@@ -6,12 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class zoneDessin extends JPanel {
+public class ZoneDessin extends JPanel {
     private Figure figureSelectionne;
     private ArrayList<Figure> listeFigure;
     private Color couleur;
 
-    public zoneDessin(){
+    public ZoneDessin(){
         super();
         this.listeFigure= new ArrayList<Figure>();
         this.listeFigure.clear();
