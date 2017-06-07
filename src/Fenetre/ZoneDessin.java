@@ -1,6 +1,6 @@
 package Fenetre;
 
-import Figure.Figure;
+import Figure.*;
 import Figure.Point;
 
 import javax.imageio.ImageIO;
@@ -21,6 +21,7 @@ public class ZoneDessin extends JPanel {
         this.listeFigure= new ArrayList<Figure>();
         this.listeFigure.clear();
         this.couleur = Color.black;
+        figureSelectionne = new Cercle();
 
     }
 
