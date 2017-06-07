@@ -127,7 +127,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 typeOutil = TypeOutil.FIGURE;
                 break;
             case "Segment":
-                //zoneDessin.setFigureSelectionne(new Segment());
+                zoneDessin.setFigureSelectionne(new Segment());
                 typeOutil = TypeOutil.FIGURE;
                 break;
             case "Pinceau":
@@ -177,6 +177,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         if (typeOutil == TypeOutil.FIGURE) {
             Point origine = new Point(e.getX(), e.getY());
             zoneDessin.setOrigineFigure(origine);
+
         }
         if (typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
@@ -208,7 +209,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                         zoneDessin.setFigureSelectionne(new Cercle());
                         break;
                     case "Figure.Segment":
-                        //zoneDessin.setFigureSelectionne(new Segment());
+                        zoneDessin.setFigureSelectionne(new Segment());
                         break;
 
                 }
@@ -267,6 +268,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                         depart.setY(depart.getY() - (longueurMax - hauteur));
                     }
                 }
+            }else if(nomFigure == "Figure.Segment"){
+                arrive.setX(e.getX());
+                arrive.setY(e.getY());
+                zoneDessin.setArriveSegment(arrive);
             }
             zoneDessin.setOrigineDessinFigure(depart);
             zoneDessin.setDimensionFigure(largeur, hauteur);
@@ -274,7 +279,6 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         }
         if (typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
-
 
         }
         if (typeOutil == TypeOutil.GOMME) {

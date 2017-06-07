@@ -79,6 +79,9 @@ public class ZoneDessin extends JPanel {
         //System.out.println("Dimension set en "+hauteur+" ,"+largeur );
         this.figureSelectionne.setBoundingBox(hauteur, largeur);
     }
+    public void setArriveSegment(Point arrive){
+        this.figureSelectionne.setArriveDessin(arrive);
+    }
     public void setOrigineDessinFigure(Point p){
         this.figureSelectionne.setDepartDessin(p);
     }

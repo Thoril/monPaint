@@ -30,14 +30,6 @@ public class Coeur extends Figure {
         this.petit_axe = petit_axe;
     }
 
-    public double getPerimetre() {
-        return (Math.PI * (this.petit_axe + this.grand_axe));
-    }
-
-    public double getSurface() {
-        return ((Math.PI * this.petit_axe * this.grand_axe) / 4);
-    }
-
     @Override
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
@@ -46,26 +38,11 @@ public class Coeur extends Figure {
             int y = this.departDessin.getY();
             int height = petit_axe;
             int width = petit_axe;
-            int[] triangleX = {
-                    x - 2*width/18,
-                    x + width + 2*width/18,
-                    (x - 2*width/18 + x + width + 2*width/18)/2};
-            int[] triangleY = {
-                    y + height - 2*height/3,
-                    y + height - 2*height/3,
-                    y + height };
-            g.fillOval(
-                    (int)(x - width/8),
-                    y,
-                    (int)(width/2 + width/4.4),
-                    height/2);
-            g.fillOval(
-                    (int)(x + width/2 - width/11),
-                    y,
-                    (int)(width/2 + width/4.4),
-                    height/2);
+            int[] triangleX = {x - 2 * width / 18, x + width + 2 * width / 18, (x - 2 * width / 18 + x + width + 2 * width / 18) / 2};
+            int[] triangleY = {y + height - 2 * height / 3, y + height - 2 * height / 3, y + height};
+            g.fillOval((int) (x - width / 8), y, (int) (width / 2 + width / 4.4), height / 2);
+            g.fillOval((int) (x + width / 2 - width / 11), y, (int) (width / 2 + width / 4.4), height / 2);
             g.fillPolygon(triangleX, triangleY, triangleX.length);
-
         }
 
     }
