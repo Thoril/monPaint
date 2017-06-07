@@ -2,9 +2,14 @@ package Fenetre;
 
 import Figure.Figure;
 import Figure.Point;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.image.*;
 
 public class ZoneDessin extends JPanel {
     private Figure figureSelectionne;
@@ -16,6 +21,7 @@ public class ZoneDessin extends JPanel {
         this.listeFigure= new ArrayList<Figure>();
         this.listeFigure.clear();
         this.couleur = Color.black;
+
     }
 
     protected void paintComponent(Graphics g) {
@@ -81,6 +87,23 @@ public class ZoneDessin extends JPanel {
 
     public void effacer(){
         this.listeFigure = new ArrayList<Figure>();
+        repaint();
+    }
+    public void save(String name){
+        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        print(g);
+        g.dispose();
+        try {
+            ImageIO.write(image, "png", new File(name+".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void load(String name){
+        //paintImage = ImageIO.read(new File(name));
+        // update panel with new paint image
         repaint();
     }
 }

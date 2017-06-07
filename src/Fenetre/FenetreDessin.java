@@ -2,47 +2,55 @@ package Fenetre;
 
 import Figure.*;
 import Figure.Point;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Objects;
 import javax.swing.*;
-import Figure.Rectangle;
-import java.lang.Runnable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class FenetreDessin extends JFrame implements ActionListener,MouseMotionListener,MouseListener,ItemListener,Runnable {
-    private ArrayList listeZoneDessin =  new ArrayList();
-    private int indiceOnglet= 0;
+import Figure.Rectangle;
+
+
+public class FenetreDessin extends JFrame implements ActionListener, MouseMotionListener, MouseListener, ItemListener, ChangeListener {
+    private ArrayList listeZoneDessin = new ArrayList();
+    private int indiceOnglet = 0;
     private JTabbedPane mesOnglets = new JTabbedPane();
+
     private enum TypeOutil {FIGURE, PINCEAU, GOMME}
+
     private TypeOutil typeOutil;
     private int taillePinceau = 5;
     private Color couleurActuelle;
-    public FenetreDessin(String titre){
+    private  JPanel monPanel = new JPanel();
+
+    public FenetreDessin(String titre) {
         super(titre);
-        this.setSize(800,600);
+        this.setSize(800, 600);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
-        Container contentPane = this.getContentPane() ;
-        JPanel monPanel = new JPanel();
+        Container contentPane = this.getContentPane();
+
         monPanel.setLayout(new FlowLayout());
-        monPanel.add( panelCouleur());
+        monPanel.add(panelCouleur());
         monPanel.add(panelFigure());
         monPanel.add(panelOutil());
-        contentPane.add(monPanel,BorderLayout.SOUTH);
+
+        contentPane.add(monPanel, BorderLayout.SOUTH);
         this.listeZoneDessin.add(new ZoneDessin());
         this.listeZoneDessin.add(new ZoneDessin());
-        for (Object item: this.listeZoneDessin) {
+        for (Object item : this.listeZoneDessin) {
             ZoneDessin zoneDessin = (ZoneDessin) item;
-            mesOnglets.add(zoneDessin,"zone n°"+ ++indiceOnglet);
+            mesOnglets.add(zoneDessin, "zone n°" + ++indiceOnglet);
             zoneDessin.addMouseListener(this);
             zoneDessin.addMouseMotionListener(this);
-
         }
-        //mesOnglets.add(listeZoneDessin[0],"zone n°1");
-        contentPane.add(mesOnglets,BorderLayout.CENTER);
 
+        contentPane.add(mesOnglets, BorderLayout.CENTER);
+        typeOutil = TypeOutil.PINCEAU;
+        this.couleurActuelle = Color.black;
         this.setJMenuBar(monMenu());
         this.setVisible(true);
     }
@@ -50,90 +58,105 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     @Override
     public void actionPerformed(ActionEvent e) {
         ZoneDessin zoneDessin;
-        if(this.mesOnglets.getSelectedIndex()!= -1) {
+        if (this.mesOnglets.getSelectedIndex() != -1) {
             zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
-        }else{
+        } else {
             zoneDessin = new ZoneDessin();
         }
         String cmd = e.getActionCommand();
-        switch (cmd){
-            case"Noir":
+        switch (cmd) {
+            case "Noir":
                 zoneDessin.setCouleur(Color.black);
-                this.couleurActuelle =Color.black;
+                this.couleurActuelle = Color.black;
                 break;
-            case"Rouge":
+            case "Rouge":
                 zoneDessin.setCouleur(Color.RED);
-                this.couleurActuelle =Color.red;
+                this.couleurActuelle = Color.red;
                 break;
-            case"Vert":
+            case "Vert":
                 zoneDessin.setCouleur(Color.green);
-                this.couleurActuelle =Color.green;
+                this.couleurActuelle = Color.green;
                 break;
-            case"Bleu":
+            case "Bleu":
                 zoneDessin.setCouleur(Color.blue);
-                this.couleurActuelle =Color.blue;
+                this.couleurActuelle = Color.blue;
                 break;
-            case"Jaune":
+            case "Blanc":
+                zoneDessin.setCouleur(Color.WHITE);
+                this.couleurActuelle = Color.WHITE;
+                break;
+            case "Plus...":
+                MonJColorChooser tcc = new MonJColorChooser();
+                this.couleurActuelle = tcc.showDialog(tcc, "Selectionner une Couleur", Color.WHITE);
+                zoneDessin.setCouleur(this.couleurActuelle);
+                break;
+            case "Jaune":
                 zoneDessin.setCouleur(Color.YELLOW);
-                this.couleurActuelle =Color.yellow;
+                this.couleurActuelle = Color.yellow;
                 break;
-            case"Rose":
+            case "Rose":
                 zoneDessin.setCouleur(Color.PINK);
-                this.couleurActuelle =Color.pink;
+                this.couleurActuelle = Color.pink;
                 break;
-            case"Magenta":
+            case "Magenta":
                 zoneDessin.setCouleur(Color.magenta);
-                this.couleurActuelle =Color.magenta;
+                this.couleurActuelle = Color.magenta;
                 break;
-            case"Orange":
+            case "Orange":
                 zoneDessin.setCouleur(Color.orange);
-                this.couleurActuelle =Color.orange;
+                this.couleurActuelle = Color.orange;
                 break;
-            case"Ellipse":
+            case "Ellipse":
                 zoneDessin.setFigureSelectionne(new Ellipse());
                 typeOutil = TypeOutil.FIGURE;
                 break;
-            case"Coeur":
+            case "Coeur":
                 zoneDessin.setFigureSelectionne(new Coeur());
                 typeOutil = TypeOutil.FIGURE;
                 break;
-            case"Cercle":
+            case "Cercle":
                 zoneDessin.setFigureSelectionne(new Cercle());
                 typeOutil = TypeOutil.FIGURE;
                 break;
-            case"Carre":
+            case "Carre":
                 zoneDessin.setFigureSelectionne(new Carre());
                 typeOutil = TypeOutil.FIGURE;
                 break;
-            case"Rectangle":
+            case "Rectangle":
                 zoneDessin.setFigureSelectionne(new Rectangle());
                 typeOutil = TypeOutil.FIGURE;
                 break;
-            case"Pinceau":
+            case "Segment":
+                //zoneDessin.setFigureSelectionne(new Segment());
+                typeOutil = TypeOutil.FIGURE;
+                break;
+            case "Pinceau":
                 typeOutil = TypeOutil.PINCEAU;
                 break;
-            case"Effacer":
+            case "Effacer":
                 zoneDessin.effacer();
                 break;
-            case"Quitter":
+            case "Quitter":
                 System.exit(0);
                 break;
-            case"Nouvel Onglet":
+            case "Nouvel Onglet":
                 ZoneDessin z = new ZoneDessin();
-                mesOnglets.add(z,"zone n°"+ ++indiceOnglet);
+                mesOnglets.add(z, "zone n°" + ++indiceOnglet);
                 z.addMouseListener(this);
                 z.addMouseMotionListener(this);
                 this.listeZoneDessin.add(z);
                 break;
-            case"Supprimer Onglet":
+            case "Supprimer Onglet":
                 int indiceOngletActif = this.mesOnglets.getSelectedIndex();
-                System.out.println("indice:"+indiceOngletActif);
+                System.out.println("indice:" + indiceOngletActif);
                 mesOnglets.removeTabAt(indiceOngletActif);
                 this.listeZoneDessin.remove(indiceOngletActif);
                 System.out.println("Suppresion d'un Onglet");
-                //mesOnglets.
                 break;
-            case"Gomme":
+            case "Sauvegarder":
+                zoneDessin.save("monImage");
+                break;
+            case "Gomme":
                 typeOutil = TypeOutil.GOMME;
                 break;
 
@@ -151,11 +174,11 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     public void mousePressed(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
-       if(typeOutil == TypeOutil.FIGURE) {
-           Point origine = new Point(e.getX(), e.getY());
-           zoneDessin.setOrigineFigure(origine);
-       }
-        if(typeOutil == TypeOutil.PINCEAU) {
+        if (typeOutil == TypeOutil.FIGURE) {
+            Point origine = new Point(e.getX(), e.getY());
+            zoneDessin.setOrigineFigure(origine);
+        }
+        if (typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
         }
     }
@@ -164,8 +187,8 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     public void mouseReleased(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
-        if(typeOutil == TypeOutil.FIGURE) {
-            if( zoneDessin.getDepartDessin() != null) {
+        if (typeOutil == TypeOutil.FIGURE) {
+            if (zoneDessin.getDepartDessin() != null) {
                 zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
                 String nomFigure = zoneDessin.getFigureSelectionne().getClass().getName();
                 switch (nomFigure) {
@@ -184,11 +207,14 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
                     case "Figure.Cercle":
                         zoneDessin.setFigureSelectionne(new Cercle());
                         break;
+                    case "Figure.Segment":
+                        //zoneDessin.setFigureSelectionne(new Segment());
+                        break;
 
                 }
             }
         }
-        if(typeOutil == TypeOutil.PINCEAU) {
+        if (typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
         }
         repaint();
@@ -196,7 +222,6 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
 
     }
 
@@ -210,34 +235,34 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
-        if(typeOutil == TypeOutil.FIGURE) {
+        if (typeOutil == TypeOutil.FIGURE) {
             Point origine = zoneDessin.getOrigineFigure();
-            Point depart = new Point(),arrive = new Point();
-            if(origine.getX()> e.getX()){
+            Point depart = new Point(), arrive = new Point();
+            if (origine.getX() > e.getX()) {
                 depart.setX(e.getX());
                 arrive.setX(origine.getX());
-            }else{
+            } else {
                 depart.setX(origine.getX());
                 arrive.setX(e.getX());
             }
-            if(origine.getY()> e.getY()){
+            if (origine.getY() > e.getY()) {
                 depart.setY(e.getY());
                 arrive.setY(origine.getY());
-            }else{
+            } else {
                 depart.setY(origine.getY());
                 arrive.setY(e.getY());
             }
             int largeur = arrive.getX() - depart.getX();
             int hauteur = arrive.getY() - depart.getY();
-            int longueurMax = Math.max(hauteur,largeur);
+            int longueurMax = Math.max(hauteur, largeur);
             String nomFigure = zoneDessin.getFigureSelectionne().getClass().getName();
-            if(nomFigure == "Figure.Carre" || nomFigure == "Figure.Cercle" || nomFigure == "Figure.Coeur"){
-                if(origine.getX()> e.getX()) {
+            if (nomFigure == "Figure.Carre" || nomFigure == "Figure.Cercle" || nomFigure == "Figure.Coeur") {
+                if (origine.getX() > e.getX()) {
                     if (largeur < longueurMax) {
                         depart.setX(depart.getX() - (longueurMax - largeur));
                     }
                 }
-                if(origine.getY()> e.getY()) {
+                if (origine.getY() > e.getY()) {
                     if (hauteur < longueurMax) {
                         depart.setY(depart.getY() - (longueurMax - hauteur));
                     }
@@ -247,12 +272,12 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
             zoneDessin.setDimensionFigure(largeur, hauteur);
 
         }
-        if(typeOutil == TypeOutil.PINCEAU) {
-            Thread tache = pinceau(e);
-            tache.start();
+        if (typeOutil == TypeOutil.PINCEAU) {
+            pinceau(e);
+
 
         }
-        if(typeOutil == TypeOutil.GOMME) {
+        if (typeOutil == TypeOutil.GOMME) {
             gomme(e);
         }
         zoneDessin.repaint();
@@ -263,7 +288,12 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
     }
 
-    private void pinceau(MouseEvent  e){
+    @Override
+    public void stateChanged(ChangeEvent e) {
+
+    }
+
+    private void pinceau(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         zoneDessin.setFigureSelectionne(new Cercle());
@@ -274,7 +304,8 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
         zoneDessin.setFigureSelectionne(new Cercle());
     }
-    private void gomme(MouseEvent  e){
+
+    private void gomme(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         zoneDessin.setFigureSelectionne(new Carre());
@@ -286,52 +317,58 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
         zoneDessin.setFigureSelectionne(new Carre());
     }
-    private JPanel panelCouleur(){
+
+    private JPanel panelCouleur() {
         JPanel panneauCouleur = new JPanel();
-        panneauCouleur.setLayout((new GridLayout(2,4) ));
-        Bouton bNoir = new Bouton("Noir",Color.black, this);
+        panneauCouleur.setLayout((new GridLayout(2, 5)));
+        Bouton bNoir = new Bouton("Noir", Color.black, this);
         panneauCouleur.add(bNoir);
-        Bouton bRouge = new Bouton("Rouge",Color.red,this);
+        Bouton bRouge = new Bouton("Rouge", Color.red, this);
         panneauCouleur.add(bRouge);
-        Bouton bVert = new Bouton("Vert",Color.green,this);
+        Bouton bVert = new Bouton("Vert", Color.green, this);
         panneauCouleur.add(bVert);
-        Bouton bBleu = new Bouton("Bleu",Color.blue,this);
+        Bouton bBleu = new Bouton("Bleu", Color.blue, this);
         panneauCouleur.add(bBleu);
-        Bouton bJaune = new Bouton("Jaune",Color.yellow,this);
+        Bouton bJaune = new Bouton("Jaune", Color.yellow, this);
         panneauCouleur.add(bJaune);
-        Bouton bRose = new Bouton("Rose",Color.pink,this);
+        Bouton bRose = new Bouton("Rose", Color.pink, this);
         panneauCouleur.add(bRose);
-        Bouton bMagenta = new Bouton("Magenta",Color.MAGENTA, this);
+        Bouton bMagenta = new Bouton("Magenta", Color.MAGENTA, this);
         panneauCouleur.add(bMagenta);
-        Bouton bOrange = new Bouton("Orange",Color.ORANGE, this);
+        Bouton bOrange = new Bouton("Orange", Color.ORANGE, this);
         panneauCouleur.add(bOrange);
+        Bouton bBlanc = new Bouton("Blanc", Color.WHITE, this);
+        panneauCouleur.add(bBlanc);
+        Bouton bSelectColor = new Bouton("Plus...", Color.GRAY, this);
+        panneauCouleur.add(bSelectColor);
         return (panneauCouleur);
     }
 
-    private JPanel panelFigure(){
-        JPanel panneauFigure= new JPanel();
-        panneauFigure.setLayout(new GridLayout(2,3));
-        Bouton bEllipse = new Bouton("Ellipse",Color.white,this);
+    private JPanel panelFigure() {
+        JPanel panneauFigure = new JPanel();
+        panneauFigure.setLayout(new GridLayout(2, 3));
+        Bouton bEllipse = new Bouton("Ellipse", Color.white, this);
         panneauFigure.add(bEllipse);
-        Bouton bCercle = new Bouton("Cercle",Color.white,this);
+        Bouton bCercle = new Bouton("Cercle", Color.white, this);
         panneauFigure.add(bCercle);
-        Bouton bCarre = new Bouton("Carre",Color.white,this);
+        Bouton bCarre = new Bouton("Carre", Color.white, this);
         panneauFigure.add(bCarre);
-        Bouton bRectangle = new Bouton("Rectangle",Color.white,this);
+        Bouton bRectangle = new Bouton("Rectangle", Color.white, this);
         panneauFigure.add(bRectangle);
-        Bouton bCoeur = new Bouton("Coeur",Color.white,this);
+        Bouton bCoeur = new Bouton("Coeur", Color.white, this);
         panneauFigure.add(bCoeur);
-        Bouton bSegment = new Bouton("Segment",Color.white,this);
+        Bouton bSegment = new Bouton("Segment", Color.white, this);
         panneauFigure.add(bSegment);
         return (panneauFigure);
     }
-    private JPanel panelOutil(){
-        JPanel panneauOutil= new JPanel();
-        panneauOutil.setLayout(new GridLayout(2,2));
 
-        Bouton pinceau = new Bouton("Pinceau",Color.white,this);
+    private JPanel panelOutil() {
+        JPanel panneauOutil = new JPanel();
+        panneauOutil.setLayout(new GridLayout(2, 2));
+
+        Bouton pinceau = new Bouton("Pinceau", Color.white, this);
         panneauOutil.add(pinceau);
-        Bouton gomme = new Bouton("Gomme",Color.white,this);
+        Bouton gomme = new Bouton("Gomme", Color.white, this);
         panneauOutil.add(gomme);
         JComboBox taillePinceau = new JComboBox();
         taillePinceau.addItem("5px");
@@ -345,13 +382,13 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         return (panneauOutil);
     }
 
-    private JMenuBar monMenu(){
+    private JMenuBar monMenu() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu   fichier = new JMenu("Fichier"),
+        JMenu fichier = new JMenu("Fichier"),
                 edition = new JMenu("Edition"),
                 apropos = new JMenu("A propos");
 
-        JMenuItem   effacer = new JMenuItem("Effacer"),
+        JMenuItem effacer = new JMenuItem("Effacer"),
                 quitter = new JMenuItem("Quitter"),
                 sauvegarder = new JMenuItem("Sauvegarder"),
                 auteur = new JMenuItem("Auteur"),
@@ -382,6 +419,7 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
         effacer.addActionListener(this);
         nouvelOnglet.addActionListener(this);
         supprimerOnglet.addActionListener(this);
+        sauvegarder.addActionListener(this);
         menuBar.add(fichier);
         menuBar.add(edition);
         menuBar.add(apropos);
@@ -393,17 +431,17 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     @Override
     public void itemStateChanged(ItemEvent e) {
         String str = (String) e.getItem();
-        switch (str){
-            case"5px":
+        switch (str) {
+            case "5px":
                 this.taillePinceau = 5;
                 break;
-            case"10px":
+            case "10px":
                 this.taillePinceau = 10;
                 break;
-            case"15px":
+            case "15px":
                 this.taillePinceau = 15;
                 break;
-            case"20px":
+            case "20px":
                 this.taillePinceau = 20;
                 break;
             default:
@@ -412,11 +450,6 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
         }
     }
-        @Override
-        public void run() {
-            // Code à exécuter.
-
-        }
 
 
 }
