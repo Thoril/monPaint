@@ -248,8 +248,8 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
 
         }
         if(typeOutil == TypeOutil.PINCEAU) {
-            Thread tache = pinceau(e);
-            tache.start();
+            pinceau(e);
+
 
         }
         if(typeOutil == TypeOutil.GOMME) {
@@ -414,7 +414,7 @@ public class FenetreDessin extends JFrame implements ActionListener,MouseMotionL
     }
         @Override
         public void run() {
-            // Code à exécuter.
+           // pinceau(e);
 
         }
 

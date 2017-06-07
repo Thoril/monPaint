@@ -40,7 +40,7 @@ public class Ellipse extends Figure {
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
         if(this.departDessin != null && this.grand_axe != 0 && this.petit_axe != 0) {
-            g.fillOval(this.departDessin.getX(), this.departDessin.getY(), this.petit_axe, this.grand_axe);
+            g.drawOval(this.departDessin.getX(), this.departDessin.getY(), this.petit_axe, this.grand_axe);
         }
     }
     public void setBoundingBox(int hauteurBB, int largeurBB) {
