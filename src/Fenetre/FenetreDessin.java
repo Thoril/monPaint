@@ -405,7 +405,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
 
     private JToolBar panelFigure() {
         JToolBar panneauFigure = new JToolBar("Figures",1);
-        panneauFigure.setLayout(new FlowLayout(FlowLayout.LEADING));
+        panneauFigure.setLayout(new GridLayout(14,2));
         Bouton bEllipse = new Bouton("Ellipse", this, new ImageIcon("./Ressources/ellipse.png"));
         panneauFigure.add(bEllipse);
         Bouton bCercle = new Bouton("Cercle", this, new ImageIcon("./Ressources/cercle.png"));
@@ -423,13 +423,14 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
 
     private JToolBar panelOutil() {
         JToolBar panneauOutil = new JToolBar("Outils");
-        panneauOutil.setLayout(new FlowLayout());
+        panneauOutil.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        Bouton pinceau = new Bouton("Pinceau", Color.white, this);
+        Bouton pinceau = new Bouton("Pinceau", this, new ImageIcon("./Ressources/pinceau.png"));
         panneauOutil.add(pinceau);
-        Bouton gomme = new Bouton("Gomme", Color.white, this);
+        Bouton gomme = new Bouton("Gomme", this, new ImageIcon("./Ressources/gomme.png"));
         panneauOutil.add(gomme);
         JComboBox taillePinceau = new JComboBox();
+        taillePinceau.add(new Label("Epaisseur"));
         taillePinceau.addItem("5px");
         taillePinceau.addItem("10px");
         taillePinceau.addItem("15px");
@@ -439,9 +440,9 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         JCheckBox remplissage = new JCheckBox("Remplissage");
         remplissage.addActionListener(this);
         panneauOutil.add(remplissage);
-        Bouton precedent = new Bouton("Précédent", Color.white, this);
+        Bouton precedent = new Bouton("Précédent",  this, new ImageIcon("./Ressources/precedent.png"));
         panneauOutil.add(precedent);
-        Bouton suivant = new Bouton("Suivant", Color.white, this);
+        Bouton suivant = new Bouton("Suivant",  this, new ImageIcon("./Ressources/suivant.png"));
         panneauOutil.add(suivant);
 
         return (panneauOutil);
