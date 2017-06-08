@@ -21,7 +21,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
     private TypeOutil typeOutil;
     private int taillePinceau = 5;
     private Color couleurActuelle;
-    private String figureActuelle;
+    private String figureActuelle = "";
     private boolean remplissage;
 
     public FenetreDessin(String titre) {
@@ -166,6 +166,9 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                         break;
                     case "Segment":
                         z.setFigureSelectionne(new Segment());
+                        break;
+                    default:
+
                         break;
                 }
                 this.listeZoneDessin.add(z);
