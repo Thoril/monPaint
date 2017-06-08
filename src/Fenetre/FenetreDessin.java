@@ -56,6 +56,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         ZoneDessin zoneDessin;
         if (this.mesOnglets.getSelectedIndex() != -1) {
             zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
+            System.out.println("Onglet:"+this.mesOnglets.getSelectedIndex());
         } else {
             zoneDessin = new ZoneDessin();
         }
@@ -404,18 +405,18 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
 
     private JToolBar panelFigure() {
         JToolBar panneauFigure = new JToolBar("Figures",1);
-        panneauFigure.setLayout(new GridLayout(3, 2));
-        Bouton bEllipse = new Bouton("Ellipse", Color.white, this);
+        panneauFigure.setLayout(new FlowLayout(FlowLayout.LEADING));
+        Bouton bEllipse = new Bouton("Ellipse", this, new ImageIcon("./Ressources/ellipse.png"));
         panneauFigure.add(bEllipse);
-        Bouton bCercle = new Bouton("Cercle", Color.white, this);
+        Bouton bCercle = new Bouton("Cercle", this, new ImageIcon("./Ressources/cercle.png"));
         panneauFigure.add(bCercle);
-        Bouton bCarre = new Bouton("Carre", Color.white, this);
+        Bouton bCarre = new Bouton("Carre", this, new ImageIcon("./Ressources/carre.png"));
         panneauFigure.add(bCarre);
-        Bouton bRectangle = new Bouton("Rectangle", Color.white, this);
+        Bouton bRectangle = new Bouton("Rectangle",  this, new ImageIcon("./Ressources/Rectangle.png"));
         panneauFigure.add(bRectangle);
-        Bouton bCoeur = new Bouton("Coeur", Color.white, this);
+        Bouton bCoeur = new Bouton("Coeur",  this, new ImageIcon("./Ressources/coeur.png"));
         panneauFigure.add(bCoeur);
-        Bouton bSegment = new Bouton("Segment", Color.white, this);
+        Bouton bSegment = new Bouton("Segment",  this, new ImageIcon("./Ressources/segment.png"));
         panneauFigure.add(bSegment);
         return (panneauFigure);
     }

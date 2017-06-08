@@ -17,11 +17,11 @@ public class Bouton extends JButton implements MouseMotionListener,MouseListener
         this.setBackground(color);
         this.addActionListener(ActList);
     }
-    public Bouton( String name, Color color, ActionListener ActList, Icon icon ){
+    public Bouton( String name, ActionListener ActList, Icon icon ){
         super(icon);
-        this.setBackground(color);
         this.addActionListener(ActList);
-        this.setActionCommand("name");
+        this.setActionCommand(name);
+
     }
     public Bouton(Color color, ActionListener ActList,String actionCommand){
         super();
