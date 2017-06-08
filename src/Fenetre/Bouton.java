@@ -12,17 +12,37 @@ import java.awt.event.MouseMotionListener;
 
 public class Bouton extends JButton implements MouseMotionListener,MouseListener {
 
+    /**
+     * Bouton classique avec non et couleur
+     * @param name nom du bouton
+     * @param color couleur du bouton
+     * @param ActList action listener
+     */
     public Bouton(String name, Color color, ActionListener ActList){
         super(name);
         this.setBackground(color);
         this.addActionListener(ActList);
     }
+
+    /**
+     * Bouton avec icone
+     * @param name nom du bouton
+     * @param ActList action listener
+     * @param icon icon du bouton
+     */
     public Bouton( String name, ActionListener ActList, Icon icon ){
         super(icon);
         this.addActionListener(ActList);
         this.setActionCommand(name);
 
     }
+
+    /**
+     * Bouton couleur
+     * @param color couleur du bouton
+     * @param ActList action listener
+     * @param actionCommand nom de l'action command
+     */
     public Bouton(Color color, ActionListener ActList,String actionCommand){
         super();
         this.setBackground(color);
