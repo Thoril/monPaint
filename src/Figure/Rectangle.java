@@ -79,7 +79,11 @@ public class Rectangle extends Figure {
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
         if(this.departDessin != null && this.largeur != 0 && this. longueur != 0) {
-            g.fillRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.longueur);
+            if(remplissage) {
+                g.fillRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.longueur);
+            }else {
+                g.drawRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.longueur);
+            }
         }
     }
 

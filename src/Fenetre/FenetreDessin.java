@@ -17,13 +17,13 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
     private ArrayList listeZoneDessin = new ArrayList();
     private int indiceOnglet = 0;
     private JTabbedPane mesOnglets = new JTabbedPane();
-
     private enum TypeOutil {FIGURE, PINCEAU, GOMME}
-
     private TypeOutil typeOutil;
     private int taillePinceau = 5;
     private Color couleurActuelle;
+    private String figureActuelle;
     private  JPanel monPanel = new JPanel();
+    private boolean remplissage;
 
     public FenetreDessin(String titre) {
         super(titre);
@@ -32,6 +32,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         Container contentPane = this.getContentPane();
+        remplissage = false;
 
         monPanel.setLayout(new FlowLayout());
         monPanel.add(panelCouleur());
@@ -39,15 +40,12 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         monPanel.add(panelOutil());
 
         contentPane.add(monPanel, BorderLayout.SOUTH);
-        this.listeZoneDessin.add(new ZoneDessin());
-        this.listeZoneDessin.add(new ZoneDessin());
-        for (Object item : this.listeZoneDessin) {
-            ZoneDessin zoneDessin = (ZoneDessin) item;
-            mesOnglets.add(zoneDessin, "zone n°" + ++indiceOnglet);
-            zoneDessin.addMouseListener(this);
-            zoneDessin.addMouseMotionListener(this);
-        }
-
+        ZoneDessin zoneDessin = new ZoneDessin();
+        this.listeZoneDessin.add(zoneDessin);
+        mesOnglets.add(zoneDessin, "zone n°" + ++indiceOnglet);
+        zoneDessin.addMouseListener(this);
+        zoneDessin.addMouseMotionListener(this);
+        mesOnglets.addChangeListener(this);
         contentPane.add(mesOnglets, BorderLayout.CENTER);
         typeOutil = TypeOutil.PINCEAU;
         this.couleurActuelle = Color.black;
@@ -109,26 +107,32 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
             case "Ellipse":
                 zoneDessin.setFigureSelectionne(new Ellipse());
                 typeOutil = TypeOutil.FIGURE;
+                this.figureActuelle = "Ellipse";
                 break;
             case "Coeur":
                 zoneDessin.setFigureSelectionne(new Coeur());
                 typeOutil = TypeOutil.FIGURE;
+                this.figureActuelle = "Coeur";
                 break;
             case "Cercle":
                 zoneDessin.setFigureSelectionne(new Cercle());
                 typeOutil = TypeOutil.FIGURE;
+                this.figureActuelle = "Cercle";
                 break;
             case "Carre":
                 zoneDessin.setFigureSelectionne(new Carre());
                 typeOutil = TypeOutil.FIGURE;
+                this.figureActuelle = "Carre";
                 break;
             case "Rectangle":
                 zoneDessin.setFigureSelectionne(new Rectangle());
                 typeOutil = TypeOutil.FIGURE;
+                this.figureActuelle = "Rectangle";
                 break;
             case "Segment":
                 zoneDessin.setFigureSelectionne(new Segment());
                 typeOutil = TypeOutil.FIGURE;
+                this.figureActuelle = "Segment";
                 break;
             case "Pinceau":
                 typeOutil = TypeOutil.PINCEAU;
@@ -144,6 +148,27 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 mesOnglets.add(z, "zone n°" + ++indiceOnglet);
                 z.addMouseListener(this);
                 z.addMouseMotionListener(this);
+                z.setCouleur(couleurActuelle);
+                switch (figureActuelle) {
+                    case "Carre":
+                        z.setFigureSelectionne(new Carre());
+                        break;
+                    case "Coeur":
+                        z.setFigureSelectionne(new Coeur());
+                        break;
+                    case "Rectangle":
+                        z.setFigureSelectionne(new Rectangle());
+                        break;
+                    case "Ellipse":
+                        z.setFigureSelectionne(new Ellipse());
+                        break;
+                    case "Cercle":
+                        z.setFigureSelectionne(new Cercle());
+                        break;
+                    case "Segment":
+                        z.setFigureSelectionne(new Segment());
+                        break;
+                }
                 this.listeZoneDessin.add(z);
                 break;
             case "Supprimer Onglet":
@@ -159,7 +184,21 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
             case "Gomme":
                 typeOutil = TypeOutil.GOMME;
                 break;
-
+            case "Remplissage":
+                remplissage = ((JCheckBox)e.getSource()).isSelected();
+                break;
+            case "Précédent":
+                zoneDessin.precedent();
+                zoneDessin.repaint();
+                break;
+            case "Suivant":
+                zoneDessin.suivant();
+                zoneDessin.repaint();
+                break;
+            case "Ouvrir":
+                zoneDessin.suivant();
+                zoneDessin.repaint();
+                break;
             default:
                 System.err.println(cmd);
                 break;
@@ -177,7 +216,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         if (typeOutil == TypeOutil.FIGURE) {
             Point origine = new Point(e.getX(), e.getY());
             zoneDessin.setOrigineFigure(origine);
-
+            zoneDessin.setRemplissage(this.remplissage);
         }
         if (typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
@@ -303,6 +342,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         zoneDessin.setFigureSelectionne(new Cercle());
         Point origine = new Point(e.getX(), e.getY());
         zoneDessin.setOrigineFigure(origine);
+        zoneDessin.setRemplissage(true);
         zoneDessin.setOrigineDessinFigure(origine);
         zoneDessin.setDimensionFigure(taillePinceau, taillePinceau);
         zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
@@ -315,6 +355,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         zoneDessin.setFigureSelectionne(new Carre());
         Point origine = new Point(e.getX(), e.getY());
         zoneDessin.setOrigineFigure(origine);
+        zoneDessin.setRemplissage(true);
         zoneDessin.setCouleur(Color.WHITE);
         zoneDessin.setOrigineDessinFigure(origine);
         zoneDessin.setDimensionFigure(taillePinceau, taillePinceau);
@@ -368,7 +409,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
 
     private JPanel panelOutil() {
         JPanel panneauOutil = new JPanel();
-        panneauOutil.setLayout(new GridLayout(2, 2));
+        panneauOutil.setLayout(new GridLayout(2, 3));
 
         Bouton pinceau = new Bouton("Pinceau", Color.white, this);
         panneauOutil.add(pinceau);
@@ -381,7 +422,13 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         taillePinceau.addItem("20px");
         taillePinceau.addItemListener(this);
         panneauOutil.add(taillePinceau);
-
+        JCheckBox remplissage = new JCheckBox("Remplissage");
+        remplissage.addActionListener(this);
+        panneauOutil.add(remplissage);
+        Bouton precedent = new Bouton("Précédent", Color.white, this);
+        panneauOutil.add(precedent);
+        Bouton suivant = new Bouton("Suivant", Color.white, this);
+        panneauOutil.add(suivant);
 
         return (panneauOutil);
     }
@@ -397,7 +444,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 sauvegarder = new JMenuItem("Sauvegarder"),
                 auteur = new JMenuItem("Auteur"),
                 nouvelOnglet = new JMenuItem("Nouvel Onglet"),
-                supprimerOnglet = new JMenuItem("Supprimer Onglet");
+                supprimerOnglet = new JMenuItem("Supprimer Onglet"),
+                ouvrir = new JMenuItem("Ouvrir"),
+                precedent = new JMenuItem("Précédent"),
+                suivant = new JMenuItem("Suivant");
 
         sauvegarder.setAccelerator(KeyStroke.getKeyStroke('S',
                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
@@ -408,14 +458,41 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         effacer.setAccelerator(KeyStroke.getKeyStroke('E',
                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
                 false));
-        fichier.add(effacer);
+        nouvelOnglet.setAccelerator(KeyStroke.getKeyStroke('N',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        supprimerOnglet.setAccelerator(KeyStroke.getKeyStroke('W',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        ouvrir.setAccelerator(KeyStroke.getKeyStroke('O',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        ouvrir.setAccelerator(KeyStroke.getKeyStroke('O',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        ouvrir.setAccelerator(KeyStroke.getKeyStroke('O',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        suivant.setAccelerator(KeyStroke.getKeyStroke('Y',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+        precedent.setAccelerator(KeyStroke.getKeyStroke('Z',
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+                false));
+
+
         fichier.add(sauvegarder);
+        fichier.add(ouvrir);
         fichier.addSeparator();
         fichier.add(quitter);
         fichier.setMnemonic('F');
 
         apropos.add(auteur);
 
+        edition.add(suivant);
+        edition.add(precedent);
+        edition.add(effacer);
+        edition.addSeparator();
         edition.add(nouvelOnglet);
         edition.add(supprimerOnglet);
 
@@ -424,11 +501,15 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         nouvelOnglet.addActionListener(this);
         supprimerOnglet.addActionListener(this);
         sauvegarder.addActionListener(this);
+        ouvrir.addActionListener(this);
+        precedent.addActionListener(this);
+        suivant.addActionListener(this);
+        auteur.addActionListener(this);
+
         menuBar.add(fichier);
         menuBar.add(edition);
         menuBar.add(apropos);
 
-        this.setJMenuBar(menuBar);
         return (menuBar);
     }
 

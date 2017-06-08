@@ -27,7 +27,11 @@ public class Cercle extends Ellipse{
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
         if(this.departDessin != null && this.grand_axe != 0) {
-            g.fillOval(this.departDessin.getX(), this.departDessin.getY(), this.grand_axe, this.grand_axe);
+            if(remplissage) {
+                g.fillOval(this.departDessin.getX(), this.departDessin.getY(), this.grand_axe, this.grand_axe);
+            }else{
+                g.drawOval(this.departDessin.getX(), this.departDessin.getY(), this.grand_axe, this.grand_axe);
+            }
         }
     }
     public void setBoundingBox(int hauteurBB, int largeurBB) {

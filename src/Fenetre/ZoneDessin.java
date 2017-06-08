@@ -10,15 +10,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.image.*;
+import java.util.Objects;
 
 public class ZoneDessin extends JPanel {
     private Figure figureSelectionne;
     private ArrayList<Figure> listeFigure;
     private Color couleur;
+    private ArrayList<Figure> listeBackUpFigure;
 
     public ZoneDessin(){
         super();
         this.listeFigure= new ArrayList<Figure>();
+        this.listeBackUpFigure = new ArrayList<Figure>();
         this.listeFigure.clear();
         this.couleur = Color.black;
         figureSelectionne = new Cercle();
@@ -104,10 +107,30 @@ public class ZoneDessin extends JPanel {
             e.printStackTrace();
         }
     }
-
     public void load(String name){
         //paintImage = ImageIO.read(new File(name));
         // update panel with new paint image
         repaint();
+    }
+
+    public void setRemplissage(boolean remplissage){
+        figureSelectionne.setRemplissage(remplissage);
+    }
+    public boolean isRemplissage(){
+        return figureSelectionne.isRemplissage();
+    }
+
+    public void precedent(){
+        if(!listeFigure.isEmpty()) {
+            listeBackUpFigure.add(listeFigure.get(listeFigure.size() - 1));
+            listeFigure.remove(listeFigure.size() - 1);
+        }
+    }
+    public void suivant(){
+        if(!listeBackUpFigure.isEmpty()) {
+            listeFigure.add(listeBackUpFigure.get(listeBackUpFigure.size() - 1));
+            listeBackUpFigure.remove(listeBackUpFigure.size() - 1);
+        }
+
     }
 }

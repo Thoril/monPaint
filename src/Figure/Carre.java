@@ -29,7 +29,11 @@ public class Carre extends Rectangle{
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
         if(this.departDessin != null && this.largeur != 0) {
-            g.fillRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.largeur);
+            if(remplissage) {
+                g.fillRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.largeur);
+            }else{
+                g.drawRect(this.departDessin.getX(), this.departDessin.getY(), this.largeur, this.largeur);
+            }
         }
     }
     @Override

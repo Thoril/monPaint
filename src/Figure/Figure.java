@@ -10,6 +10,7 @@ public abstract class Figure {
     protected Color couleur;
     protected Point departDessin;
     protected Point arriveDessin;
+    protected boolean remplissage;
     public Figure(Point origine, Color couleur){
         this.origine=origine;
         this.couleur = couleur;
@@ -26,6 +27,12 @@ public abstract class Figure {
         this.departDessin = new Point();
     }
 
+    public boolean isRemplissage() {
+        return remplissage;
+    }
+    public void setRemplissage(boolean remplissage) {
+        this.remplissage = remplissage;
+    }
     public void setOrigine(Point p){
         origine = p;
     }
