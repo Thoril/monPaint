@@ -12,7 +12,9 @@ import javax.swing.event.ChangeListener;
 
 import Figure.Rectangle;
 
-
+/**
+ * Classe qui instinci une fenetre type paint
+ */
 public class FenetreDessin extends JFrame implements ActionListener, MouseMotionListener, MouseListener, ItemListener, ChangeListener {
     private ArrayList listeZoneDessin = new ArrayList();
     private int indiceOnglet = 0;
@@ -24,6 +26,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
     private String figureActuelle = "";
     private boolean remplissage;
 
+    /**
+     * Constructeur avec en parametre le titre de la fenetre
+     * @param titre
+     */
     public FenetreDessin(String titre) {
         super(titre);
         GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -33,7 +39,6 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         this.setLayout(new BorderLayout());
         Container contentPane = this.getContentPane();
         remplissage = false;
-
 
         contentPane.add((panelOutil()),BorderLayout.NORTH);
         contentPane.add(panelFigure(),BorderLayout.WEST);
@@ -51,9 +56,14 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         this.setVisible(true);
     }
 
+    /**
+     * methode actionPerfomed permet de réaliser des actions lors d'évenement
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         ZoneDessin zoneDessin;
+        //on selectionne la zone de l'onglet actif
         if (this.mesOnglets.getSelectedIndex() != -1) {
             zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
             System.out.println("Onglet:"+this.mesOnglets.getSelectedIndex());
@@ -61,6 +71,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
             zoneDessin = new ZoneDessin();
         }
         String cmd = e.getActionCommand();
+        //switch en fonction du bouton / element activé
         switch (cmd) {
             case "Noir":
                 zoneDessin.setCouleur(Color.black);
@@ -222,11 +233,18 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
     public void mouseClicked(MouseEvent e) {
     }
 
+    /**
+     * Quand on appuie sur la souris
+     * @param e
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         ZoneDessin zoneDessin;
+        //on recupere la zone de dessin active
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
+
         if (typeOutil == TypeOutil.FIGURE) {
+            //on definit l'origine de la figure
             Point origine = new Point(e.getX(), e.getY());
             zoneDessin.setOrigineFigure(origine);
             zoneDessin.setRemplissage(this.remplissage);
@@ -237,13 +255,19 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         }
     }
 
+    /**
+     * quand la souris est relaché
+     * @param e
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         if (typeOutil == TypeOutil.FIGURE) {
             if (zoneDessin.getDepartDessin() != null) {
+                //on ajoute lma figure courante a la liste de figure
                 zoneDessin.addListeFigure(zoneDessin.getFigureSelectionne());
+                //on reset la figure courante
                 String nomFigure = zoneDessin.getFigureSelectionne().getClass().getName();
                 switch (nomFigure) {
                     case "Figure.Carre":
@@ -284,11 +308,13 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
     }
 
     @Override
+    //quand on dépalce la souris en gardant le clique appuyé
     public void mouseDragged(MouseEvent e) {
 
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
         if (typeOutil == TypeOutil.FIGURE) {
+            //on définit le point de départ et le point d'arrivé du dessin en fonction du positionement
             Point origine = zoneDessin.getOrigineFigure();
             Point depart = new Point(), arrive = new Point();
             if (origine.getX() > e.getX()) {
@@ -349,6 +375,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
 
     }
 
+    /**
+     * Methode pinceau permet de dessiné des cercles de la taillePinceau de la calsse et de la couleur courante de la classe
+     * @param e
+     */
     private void pinceau(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
@@ -362,6 +392,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         zoneDessin.setFigureSelectionne(new Cercle());
     }
 
+    /**
+     * Methode gomme permet de déssiné des carrés blanc de la taillePinceau de la classe
+     * @param e
+     */
     private void gomme(MouseEvent e) {
         ZoneDessin zoneDessin;
         zoneDessin = (ZoneDessin) this.listeZoneDessin.get(this.mesOnglets.getSelectedIndex());
@@ -376,6 +410,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         zoneDessin.setFigureSelectionne(new Carre());
     }
 
+    /**
+     * Toolbar des couleurs
+     * @return la toolbar des couleurs
+     */
     private JToolBar panelCouleur() {
         JToolBar panneauCouleur = new JToolBar("Couleur"    );
         panneauCouleur.setLayout((new FlowLayout(FlowLayout.LEFT)));
@@ -402,6 +440,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         return (panneauCouleur);
     }
 
+    /**
+     * Methode pour creer la toolbar des figures
+     * @return toolbar des figures
+     */
     private JToolBar panelFigure() {
         JToolBar panneauFigure = new JToolBar("Figures",1);
         panneauFigure.setLayout(new GridLayout(14,2));
@@ -420,6 +462,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         return (panneauFigure);
     }
 
+    /**
+     * Permet de creer la toobar des outils
+     * @return toolbar des outils
+     */
     private JToolBar panelOutil() {
         JToolBar panneauOutil = new JToolBar("Outils");
         panneauOutil.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -447,6 +493,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         return (panneauOutil);
     }
 
+    /**
+     * Permet de creer le Menu
+     * @return le Menu
+     */
     private JMenuBar monMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu fichier = new JMenu("Fichier"),
@@ -527,6 +577,10 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         return (menuBar);
     }
 
+    /**
+     * Methode qui gerer les évenements lors du chanegment d'etat de certain élément
+     * @param e
+     */
     @Override
     public void itemStateChanged(ItemEvent e) {
         String str = (String) e.getItem();
