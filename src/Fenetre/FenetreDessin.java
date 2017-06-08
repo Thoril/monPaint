@@ -22,24 +22,22 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
     private int taillePinceau = 5;
     private Color couleurActuelle;
     private String figureActuelle;
-    private  JPanel monPanel = new JPanel();
     private boolean remplissage;
 
     public FenetreDessin(String titre) {
         super(titre);
-        this.setSize(800, 600);
+        GraphicsEnvironment.getLocalGraphicsEnvironment();
+        this.setExtendedState(this.getExtendedState() | this.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         Container contentPane = this.getContentPane();
         remplissage = false;
 
-        monPanel.setLayout(new FlowLayout());
-        monPanel.add(panelCouleur());
-        monPanel.add(panelFigure());
-        monPanel.add(panelOutil());
 
-        contentPane.add(monPanel, BorderLayout.SOUTH);
+        contentPane.add((panelOutil()),BorderLayout.NORTH);
+        contentPane.add(panelFigure(),BorderLayout.WEST);
+        contentPane.add(panelCouleur(), BorderLayout.SOUTH);
         ZoneDessin zoneDessin = new ZoneDessin();
         this.listeZoneDessin.add(zoneDessin);
         mesOnglets.add(zoneDessin, "zone n°" + ++indiceOnglet);
@@ -86,6 +84,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
             case "Plus...":
                 MonJColorChooser tcc = new MonJColorChooser();
                 this.couleurActuelle = tcc.showDialog(tcc, "Selectionner une Couleur", Color.WHITE);
+
                 zoneDessin.setCouleur(this.couleurActuelle);
                 break;
             case "Jaune":
@@ -179,7 +178,12 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 System.out.println("Suppresion d'un Onglet");
                 break;
             case "Sauvegarder":
+                JFileChooser save = new JFileChooser();
                 zoneDessin.save("monImage");
+                int r=save.showSaveDialog(this);
+                if(r==JFileChooser.APPROVE_OPTION){
+                    zoneDessin.save(save.getSelectedFile().getAbsolutePath());
+                }
                 break;
             case "Gomme":
                 typeOutil = TypeOutil.GOMME;
@@ -206,6 +210,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                     String nom = choix.getSelectedFile().getName();
                     // chemin absolu du fichier choisi
                     String chemin =choix.getSelectedFile().getAbsolutePath();
+                    zoneDessin.load(chemin);
                 }
                 break;
             default:
@@ -226,6 +231,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
             Point origine = new Point(e.getX(), e.getY());
             zoneDessin.setOrigineFigure(origine);
             zoneDessin.setRemplissage(this.remplissage);
+            zoneDessin.setArriveSegment(origine);
         }
         if (typeOutil == TypeOutil.PINCEAU) {
             pinceau(e);
@@ -259,7 +265,6 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                     case "Figure.Segment":
                         zoneDessin.setFigureSelectionne(new Segment());
                         break;
-
                 }
             }
         }
@@ -305,7 +310,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
             int hauteur = arrive.getY() - depart.getY();
             int longueurMax = Math.max(hauteur, largeur);
             String nomFigure = zoneDessin.getFigureSelectionne().getClass().getName();
-            if (nomFigure == "Figure.Carre" || nomFigure == "Figure.Cercle" || nomFigure == "Figure.Coeur") {
+            if (nomFigure.equals("Figure.Carre") || nomFigure.equals("Figure.Cercle") || nomFigure.equals("Figure.Coeur")) {
                 if (origine.getX() > e.getX()) {
                     if (largeur < longueurMax) {
                         depart.setX(depart.getX() - (longueurMax - largeur));
@@ -316,7 +321,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                         depart.setY(depart.getY() - (longueurMax - hauteur));
                     }
                 }
-            }else if(nomFigure == "Figure.Segment"){
+            }else if(nomFigure.equals("Figure.Segment")){
                 arrive.setX(e.getX());
                 arrive.setY(e.getY());
                 zoneDessin.setArriveSegment(arrive);
@@ -372,9 +377,9 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         zoneDessin.setFigureSelectionne(new Carre());
     }
 
-    private JPanel panelCouleur() {
-        JPanel panneauCouleur = new JPanel();
-        panneauCouleur.setLayout((new GridLayout(2, 5)));
+    private JToolBar panelCouleur() {
+        JToolBar panneauCouleur = new JToolBar("Couleur"    );
+        panneauCouleur.setLayout((new GridLayout(2,4)));
         Bouton bNoir = new Bouton("Noir", Color.black, this);
         panneauCouleur.add(bNoir);
         Bouton bRouge = new Bouton("Rouge", Color.red, this);
@@ -398,9 +403,9 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         return (panneauCouleur);
     }
 
-    private JPanel panelFigure() {
-        JPanel panneauFigure = new JPanel();
-        panneauFigure.setLayout(new GridLayout(2, 3));
+    private JToolBar panelFigure() {
+        JToolBar panneauFigure = new JToolBar("Figures",1);
+        panneauFigure.setLayout(new GridLayout(3, 2));
         Bouton bEllipse = new Bouton("Ellipse", Color.white, this);
         panneauFigure.add(bEllipse);
         Bouton bCercle = new Bouton("Cercle", Color.white, this);
@@ -416,9 +421,9 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         return (panneauFigure);
     }
 
-    private JPanel panelOutil() {
-        JPanel panneauOutil = new JPanel();
-        panneauOutil.setLayout(new GridLayout(2, 3));
+    private JToolBar panelOutil() {
+        JToolBar panneauOutil = new JToolBar("Outils");
+        panneauOutil.setLayout(new FlowLayout());
 
         Bouton pinceau = new Bouton("Pinceau", Color.white, this);
         panneauOutil.add(pinceau);

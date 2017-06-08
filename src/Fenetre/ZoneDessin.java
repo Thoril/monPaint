@@ -17,7 +17,7 @@ public class ZoneDessin extends JPanel {
     private ArrayList<Figure> listeFigure;
     private Color couleur;
     private ArrayList<Figure> listeBackUpFigure;
-
+    private Image img;
     public ZoneDessin(){
         super();
         this.listeFigure= new ArrayList<Figure>();
@@ -31,6 +31,9 @@ public class ZoneDessin extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         this.setBackground(Color.WHITE);
+        if(this.img != null) {
+            g.drawImage(img, 0, 0, null);
+        }
         //System.out.println("On dessine la figure sélectionné");
         if(!this.listeFigure.isEmpty()) {
             this.afficheListeFigure(g);
@@ -108,17 +111,14 @@ public class ZoneDessin extends JPanel {
         }
     }
     public void load(String name){
-        //paintImage = ImageIO.read(new File(name));
-        // update panel with new paint image
+        this.img= new ImageIcon(name).getImage();
         repaint();
     }
 
     public void setRemplissage(boolean remplissage){
         figureSelectionne.setRemplissage(remplissage);
     }
-    public boolean isRemplissage(){
-        return figureSelectionne.isRemplissage();
-    }
+
 
     public void precedent(){
         if(!listeFigure.isEmpty()) {
