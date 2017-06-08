@@ -8,9 +8,13 @@ import java.awt.*;
  * Created by tartru on 07/06/2017.
  */
 public class MonJColorChooser extends JColorChooser {
+    /**
+     * Constructeur d'un JcolorChooser en ne gardant que la selection de la palette de couleur
+     */
     public MonJColorChooser() {
         super();
-         AbstractColorChooserPanel[] oldPanels = this.getChooserPanels();
+        //On recupere le nom des éléments et on supprime ceux qui ne nous interessent pas
+        AbstractColorChooserPanel[] oldPanels = this.getChooserPanels();
         for (AbstractColorChooserPanel p : oldPanels) {
             switch (p.getDisplayName()) {
                 case "HSV":
