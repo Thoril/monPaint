@@ -183,7 +183,6 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 break;
             case "Sauvegarder":
                 JFileChooser save = new JFileChooser();
-                zoneDessin.save("monImage");
                 int r=save.showSaveDialog(this);
                 if(r==JFileChooser.APPROVE_OPTION){
                     zoneDessin.save(save.getSelectedFile().getAbsolutePath());
@@ -398,7 +397,7 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
         panneauCouleur.add(bOrange);
         Bouton bBlanc = new Bouton( Color.WHITE, this,"Blanc");
         panneauCouleur.add(bBlanc);
-        Bouton bSelectColor = new Bouton("Plus...", Color.GRAY, this);
+        Bouton bSelectColor = new Bouton("Plus...", this,new ImageIcon("./Ressources/palette.png"));
         panneauCouleur.add(bSelectColor);
         return (panneauCouleur);
     }
