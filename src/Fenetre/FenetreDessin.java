@@ -196,8 +196,17 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 zoneDessin.repaint();
                 break;
             case "Ouvrir":
-                zoneDessin.suivant();
-                zoneDessin.repaint();
+                JFileChooser choix = new JFileChooser();
+                MonFiltre mfi = new MonFiltre( new String[]{"gif","jpeg","jpg", "png"},"Les fichiers image");
+                choix.addChoosableFileFilter(mfi);
+                int retour=choix.showOpenDialog(this);
+                if(retour==JFileChooser.APPROVE_OPTION){
+                    // un fichier a été choisi (sortie par OK)
+                    // nom du fichier  choisi
+                    String nom = choix.getSelectedFile().getName();
+                    // chemin absolu du fichier choisi
+                    String chemin =choix.getSelectedFile().getAbsolutePath();
+                }
                 break;
             default:
                 System.err.println(cmd);
