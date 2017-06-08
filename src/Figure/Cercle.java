@@ -6,23 +6,18 @@ import java.awt.*;
  * Created by thomas on 02/05/17.
  */
 public class Cercle extends Ellipse{
-    public Cercle(Point origine, int rayon)
-    {
-        super(origine,rayon,rayon);
-    }
-    public Cercle(Point origine, int rayon, Color couleur)
-    {
-        super(origine,rayon,rayon,couleur);
-    }
-    public Cercle( int rayon)
-    {
-        super(rayon,rayon);
-    }
+    /**
+     * Constructeur sans parametre
+     */
     public Cercle()
     {
         super();
     }
 
+    /**
+     * Methode pour dessiner un Cercle
+     * @param g
+     */
     @Override
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
@@ -34,6 +29,12 @@ public class Cercle extends Ellipse{
             }
         }
     }
+
+    /**
+     * Methode pour définir le diametre du cercle
+     * @param hauteurBB
+     * @param largeurBB
+     */
     public void setBoundingBox(int hauteurBB, int largeurBB) {
         int dimension = Math.max(hauteurBB, largeurBB);
         this.petit_axe =dimension;

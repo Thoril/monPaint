@@ -6,30 +6,19 @@ public class Coeur extends Figure {
     protected int petit_axe;
     protected int grand_axe;
 
+    /**
+     * Constructeur sans parametre du coeur
+     */
     public Coeur() {
         super();
         this.petit_axe = 0;
         this.grand_axe = 0;
     }
 
-    public Coeur(Point origine, int petit_axe, int grand_axe) {
-        super(origine);
-        this.grand_axe = grand_axe;
-        this.petit_axe = petit_axe;
-    }
-
-    public Coeur(Point origine, int petit_axe, int grand_axe, Color couleur) {
-        super(origine, couleur);
-        this.grand_axe = grand_axe;
-        this.petit_axe = petit_axe;
-    }
-
-    public Coeur(int petit_axe, int grand_axe) {
-        super();
-        this.grand_axe = grand_axe;
-        this.petit_axe = petit_axe;
-    }
-
+    /**
+     * Methode pour desiner un coeur
+     * @param g
+     */
     @Override
     public void dessine(Graphics g) {
         g.setColor(this.couleur);
@@ -47,6 +36,11 @@ public class Coeur extends Figure {
 
     }
 
+    /**
+     * Methode pour définir le diametre du cercle
+     * @param hauteurBB
+     * @param largeurBB
+     */
     public void setBoundingBox(int hauteurBB, int largeurBB) {
         this.petit_axe = hauteurBB;
         this.grand_axe = largeurBB;
