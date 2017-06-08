@@ -17,6 +17,20 @@ public class Bouton extends JButton implements MouseMotionListener,MouseListener
         this.setBackground(color);
         this.addActionListener(ActList);
     }
+    public Bouton( String name, Color color, ActionListener ActList, Icon icon ){
+        super(icon);
+        this.setBackground(color);
+        this.addActionListener(ActList);
+        this.setActionCommand("name");
+    }
+    public Bouton(Color color, ActionListener ActList,String actionCommand){
+        super();
+        this.setBackground(color);
+        this.addActionListener(ActList);
+        this.setActionCommand(actionCommand);
+        Dimension d = new Dimension(25,25);
+        this.setPreferredSize(d);
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

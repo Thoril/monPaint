@@ -34,7 +34,7 @@ public class ZoneDessin extends JPanel {
         if(this.img != null) {
             g.drawImage(img, 0, 0, null);
         }
-        //System.out.println("On dessine la figure sélectionné");
+
         if(!this.listeFigure.isEmpty()) {
             this.afficheListeFigure(g);
         }

@@ -208,10 +208,6 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
                 choix.addChoosableFileFilter(mfi);
                 int retour=choix.showOpenDialog(this);
                 if(retour==JFileChooser.APPROVE_OPTION){
-                    // un fichier a été choisi (sortie par OK)
-                    // nom du fichier  choisi
-                    String nom = choix.getSelectedFile().getName();
-                    // chemin absolu du fichier choisi
                     String chemin =choix.getSelectedFile().getAbsolutePath();
                     zoneDessin.load(chemin);
                 }
@@ -382,24 +378,24 @@ public class FenetreDessin extends JFrame implements ActionListener, MouseMotion
 
     private JToolBar panelCouleur() {
         JToolBar panneauCouleur = new JToolBar("Couleur"    );
-        panneauCouleur.setLayout((new GridLayout(2,4)));
-        Bouton bNoir = new Bouton("Noir", Color.black, this);
+        panneauCouleur.setLayout((new FlowLayout(FlowLayout.LEFT)));
+        Bouton bNoir = new Bouton(Color.black, this,"Noir" );
         panneauCouleur.add(bNoir);
-        Bouton bRouge = new Bouton("Rouge", Color.red, this);
+        Bouton bRouge = new Bouton( Color.red, this,"Rouge");
         panneauCouleur.add(bRouge);
-        Bouton bVert = new Bouton("Vert", Color.green, this);
+        Bouton bVert = new Bouton( Color.green, this,"Vert");
         panneauCouleur.add(bVert);
-        Bouton bBleu = new Bouton("Bleu", Color.blue, this);
+        Bouton bBleu = new Bouton( Color.blue, this,"Bleu");
         panneauCouleur.add(bBleu);
-        Bouton bJaune = new Bouton("Jaune", Color.yellow, this);
+        Bouton bJaune = new Bouton( Color.yellow, this,"Jaune");
         panneauCouleur.add(bJaune);
-        Bouton bRose = new Bouton("Rose", Color.pink, this);
+        Bouton bRose = new Bouton( Color.pink, this,"Rose");
         panneauCouleur.add(bRose);
-        Bouton bMagenta = new Bouton("Magenta", Color.MAGENTA, this);
+        Bouton bMagenta = new Bouton( Color.MAGENTA, this,"Magenta");
         panneauCouleur.add(bMagenta);
-        Bouton bOrange = new Bouton("Orange", Color.ORANGE, this);
+        Bouton bOrange = new Bouton( Color.ORANGE, this,"Orange");
         panneauCouleur.add(bOrange);
-        Bouton bBlanc = new Bouton("Blanc", Color.WHITE, this);
+        Bouton bBlanc = new Bouton( Color.WHITE, this,"Blanc");
         panneauCouleur.add(bBlanc);
         Bouton bSelectColor = new Bouton("Plus...", Color.GRAY, this);
         panneauCouleur.add(bSelectColor);
